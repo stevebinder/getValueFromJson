@@ -5,7 +5,7 @@
 // and then doing a lookup on the key.
 // The closer the key is to the beginning of the string
 // the faster the lookup will be.
-function getValueFromJson($json, $key) {
+function getKeyFromJson($json, $key) {
     $matches;
     preg_match("/\"".$key."\":(\"?(.*?[^\\\\])?\"?),/", $json, $matches);
     $value = $matches ? $matches[1]: "";
