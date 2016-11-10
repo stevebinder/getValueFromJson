@@ -1,11 +1,11 @@
 <?php
 
 // Grabs the value for a specific key in a json structure.
-// This can be up to 100 times faster than using json_decode
+// This can be up to 25 times faster than using json_decode
 // and then doing a lookup on the key.
 // The closer the key is to the beginning of the string
 // the faster the lookup will be.
-function getKeyValueFromJsonString($json, $key) {
+function getValueFromJson($json, $key) {
     $matches;
     preg_match("/\"".$key."\":(\"?(.*?[^\\\\])?\"?),/", $json, $matches);
     $value = $matches ? $matches[1]: "";
