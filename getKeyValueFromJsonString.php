@@ -1,3 +1,5 @@
+<?php
+
 // Grabs the value for a specific key in a json structure.
 // This can be up to 100 times faster than using json_decode
 // and then doing a lookup on the key.
@@ -30,3 +32,5 @@ function getKeyValueFromJsonString($json, $key) {
         return $value * 1;
     }
 }
+
+?>
