@@ -2,6 +2,14 @@
 
 A simple PHP Class for modifying a json string without having to use **json_decode**, modifying the structure, then using **json_encode**. These methods uses less memory and time than decoding and reencoding because the whole string does not need to be read into memory to operate on it. The methods are more efficient when the given keys are closer to the beginning of the json string.
 
+## NOTE
+
+The json string you work with should not have spaces around the properties or their separators:
+
+**Good**: ```{"key":"value","key":"value};```
+**Bad**: ```{ "key":"value", "key":"value };```
+
+
 ```php
 require("json.php");
 
