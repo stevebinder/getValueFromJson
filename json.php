@@ -8,7 +8,10 @@ class json {
         preg_match("/\"".$key."\":(\"?(.*?[^\\\\])?\"?)[,\}]/", $json, $matches);
         $value = $matches ? $matches[1]: "";
         $first = substr($value, 0, 1);
-        if ($first === "\"") {
+        if ($value === "") {
+            return $value;
+        }
+        else if ($first === "\"") {
             return preg_replace('/\\\"/', "\"", substr($value, 1, strlen($value) - 2));
         }
         else if ($first === "{" || $first === "[") {
@@ -34,6 +37,9 @@ class json {
     // Set the value of a given key
     // or create it if it does not exist
     public static function set($json, $key, $value = "") {
+        if ($value === "") {
+            return self::remove($json, $key);
+        }
         if (preg_match("/\"".$key."\"/", $json)) {
             return preg_replace("/\"".$key."\":(\"?(.*?[^\\\\])?\"?)([,\}])/", '"'.$key.'":'.json_encode($value)."$3", $json);
         }
@@ -44,11 +50,7 @@ class json {
     
     // Remove the given key
     public static function remove($json, $key) {
-        $json = preg_replace('/,?"'.$key.'":"?.*?[^\\\\][",\}]/', "", $json);
-        if (substr($json, -1) !== "}") {
-            $json.="}";
-        }
-        return $json;
+        return preg_replace('/,?"'.$key.'":"?.*?[^\\\\]"?([,\}])/', "$1", $json);
     }
 
     // Add the given key to the end of the structure
