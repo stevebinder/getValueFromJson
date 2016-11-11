@@ -44,7 +44,7 @@ class json {
     
     // Remove the given key
     public static function remove($json, $key) {
-        return preg_replace('/"'.$key.'":("?(.*?[^\\\\])?"?)((, )|\})/', "", $json);
+        return preg_replace('/,?"'.$key.'":("?(.*?[^\\\\])?"?),?(\})/', "$3", $json);
     }
 
     // Add the given key to the end of the structure
