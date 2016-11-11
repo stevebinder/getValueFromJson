@@ -4,65 +4,81 @@ class json {
 
     // Get the value of a given key
     public static function get($json, $key) {
-        $matches;
-        preg_match("/\"".$key."\":(\"?(.*?[^\\\\])?\"?)[,\}]/", $json, $matches);
-        $value = $matches ? $matches[1]: "";
-        $first = substr($value, 0, 1);
-        if ($value === "") {
-            return $value;
+        $setup = is_array($key) ? $key : array($key);
+        $results = array();
+        foreach ($setup as $a) {
+            $matches;
+            preg_match("/\"".$a."\":(\"?(.*?[^\\\\])?\"?)[,\}]/", $json, $matches);
+            $value = $matches ? $matches[1]: "";
+            $first = substr($value, 0, 1);
+            if ($value !== "" && $first !== "{" && $first !== "[") {
+                $value = json_decode($value);
+            }
+            $results[$a] = $value;
         }
-        else if ($first === "\"") {
-            return preg_replace('/\\\"/', "\"", substr($value, 1, strlen($value) - 2));
-        }
-        else if ($first === "{" || $first === "[") {
-            return $value;
-        }
-        else if ($value === "true") {
-            return true;
-        }
-        else if ($value === "false") {
-            return false;
-        }
-        else if ($value === "null") {
-            return null;
-        }
-        else if ($value === "undefined") {
-            return undefined;
-        }
-        else {
-            return $value * 1;
-        }
+        return !@$setup[1] ? $results[$setup[0]] : $results;
     }
 
     // Set the value of a given key
     // or create it if it does not exist
     public static function set($json, $key, $value = "") {
-        if ($value === "") {
-            return self::remove($json, $key);
-        }
-        if (preg_match("/\"".$key."\"/", $json)) {
-            return preg_replace("/\"".$key."\":(\"?(.*?[^\\\\])?\"?)([,\}])/", '"'.$key.'":'.json_encode($value)."$3", $json);
+        $setup = array();
+        if (is_array($key)) {
+            $setup = $key;
         }
         else {
-            self::add($json, $key, $value);
+            $setup[$key] = $value;
         }
+        foreach ($setup as $a => $b) {
+            if ($b === "") {
+                $json = self::remove($json, $a);
+            }
+            else if (preg_match("/\"".$a."\"/", $json)) {
+                $json = preg_replace("/\"".$a."\":(\"?(.*?[^\\\\])?\"?)([,\}])/", '"'.$a.'":'.json_encode($b)."$3", $json);
+            }
+            else {
+                $json = self::add($json, $a, $b);
+            }
+        }
+        return $json;
     }
     
-    // Remove the given key
+    // Remove the given key(s)
     public static function remove($json, $key) {
-        return preg_replace('/,?"'.$key.'":"?.*?[^\\\\]"?([,\}])/', "$1", $json);
+        $setup = is_array($key) ? $key : array($key);
+        foreach ($setup as $a) {
+            $json = preg_replace('/,?"'.$a.'":"?.*?[^\\\\]"?([,\}])/', "$1", $json);
+        }
+        if (substr($json, 0, 2) === "{,") {
+            $json = preg_replace("/^\{,/", "{", $json);
+        }
+        return $json;
     }
 
     // Add the given key to the end of the structure
     // or if the last argument is specified
     // add it to the beginning
     public static function add($json, $key, $value = "", $first = false) {
-        if (!$first) {
-            return substr($json, 0, strlen($json) - 1) . ",\"".$key."\":".json_encode($value)."}";
+        $setup = array();
+        if (is_array($key)) {
+            $setup = $key;
+            $first = $value;
         }
         else {
-            return "{\"".$key."\":".json_encode($value).",".substr($json, 1, strlen($json));
+            $setup[$key] = $value;
         }
+        if ($first) {
+            $setup = array_reverse($setup);
+        }
+        foreach ($setup as $a => $b) {
+            if (!$first) {
+                $json = substr($json, 0, strlen($json) - 1) . ",\"".$a."\":".json_encode($b)."}";
+            }
+            else {
+                $json = "{\"".$a."\":".json_encode($b).",".substr($json, 1, strlen($json));
+            }
+        }
+        return $json;
     }
 }
 
