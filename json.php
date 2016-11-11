@@ -30,10 +30,7 @@ class json {
             $setup[$key] = $value;
         }
         foreach ($setup as $a => $b) {
-            if ($b === "") {
-                $json = self::remove($json, $a);
-            }
-            else if (preg_match("/\"".$a."\"/", $json)) {
+            if (preg_match("/\"".$a."\"/", $json)) {
                 $json = preg_replace("/\"".$a."\":(\"?(.*?[^\\\\])?\"?)([,\}])/", '"'.$a.'":'.json_encode($b)."$3", $json);
             }
             else {
