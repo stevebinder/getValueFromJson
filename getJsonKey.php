@@ -7,7 +7,7 @@
 // the faster the lookup will be.
 function getJsonKey($json, $key) {
     $matches;
-    preg_match("/\"".$key."\":(\"?(.*?[^\\\\])?\"?),/", $json, $matches);
+    preg_match("/\"".$key."\":(\"?(.*?[^\\\\])?\"?)[,\}]/", $json, $matches);
     $value = $matches ? $matches[1]: "";
     $first = substr($value, 0, 1);
     if ($first === "\"") {
