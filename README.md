@@ -5,7 +5,7 @@ A simple PHP Class for modifying a json string without having to use **json_deco
 ```php
 require("json.php");
 
-$sample = '{"first":"hello", "second":true, "third":"cat\"s long yarn", "fourth":22}';
+$sample = '{"first":"hello","second":true,"third":"cat\"s long yarn","fourth":22}';
 
 var_dump(array(
     "get" => json::get($sample, "first"),
