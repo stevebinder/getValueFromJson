@@ -7,6 +7,7 @@ A simple PHP Class for modifying a json string without having to use **json_deco
 The json string you work with should not have spaces around the properties or their separators:
 
 **Good**: ```{"key":"value","key":"value};```
+
 **Bad**: ```{ "key":"value", "key":"value };```
 
 
