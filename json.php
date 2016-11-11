@@ -44,7 +44,11 @@ class json {
     
     // Remove the given key
     public static function remove($json, $key) {
-        return preg_replace('/,?"'.$key.'":("?(.*?[^\\\\])?"?),?(\})/', "$3", $json);
+        $json = preg_replace('/,?"'.$key.'":"?.*?[^\\\\][",\}]/', "", $json);
+        if (substr($json, -1) !== "}") {
+            $json.="}";
+        }
+        return $json;
     }
 
     // Add the given key to the end of the structure
@@ -52,10 +56,10 @@ class json {
     // add it to the beginning
     public static function add($json, $key, $value = "", $first = false) {
         if (!$first) {
-            return substr($json, 0, strlen($json) - 1) . ", \"".$key."\":".json_encode($value)."}";
+            return substr($json, 0, strlen($json) - 1) . ",\"".$key."\":".json_encode($value)."}";
         }
         else {
-            return "{\"".$key."\":".json_encode($value).", ".substr($json, 1, strlen($json));
+            return "{\"".$key."\":".json_encode($value).",".substr($json, 1, strlen($json));
         }
     }
 }
