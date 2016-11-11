@@ -1,6 +1,6 @@
 <?php
 
-require("getJsonKey.php");
+require("json.php");
 
 // let's start with something big
 $generator = array();
@@ -16,7 +16,7 @@ $aTime = microtime() - $aStart;
 
 // now we do the fast method
 $bStart = microtime();
-getJsonKey($hugeJsonString, "my_key");
+json::get($hugeJsonString, "my_key");
 $bTime = microtime() - $bStart;
 
 echo "[".$aTime."ms][".$bTime."ms][".round(1/($bTime/$aTime))." times faster]";
