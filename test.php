@@ -2,7 +2,7 @@
 
 require("json.php");
 
-$sample = '{"first":"hello", "second":true, "third":"cat\"s long yarn", "fourth":22}';
+$sample = '{"first":"hello","second":true,"third":"cat\"s long yarn","fourth":22}';
 
 var_dump(array(
     "get" => json::get($sample, "first"),
