@@ -44,11 +44,9 @@ class json {
     public static function remove($json, $key) {
         $setup = is_array($key) ? $key : array($key);
         foreach ($setup as $a) {
-            $json = preg_replace('/,?"'.$a.'":"?.*?[^\\\\]"?(,|(\}))/', "$2", $json);
+            $json = preg_replace('/,?"'.$a.'":\"?([\s\S]*?[^\\\\])?"?(,|(\\}))/', "$2", $json);
         }
-        if (substr($json, 0, 2) === "{,") {
-            $json = preg_replace("/^\{,/", "{", $json);
-        }
+        $json = preg_replace("/^\{,/", "{", $json);
         return $json;
     }
 
