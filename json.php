@@ -69,12 +69,14 @@ class json {
         }
         foreach ($setup as $a => $b) {
             if (!$first) {
-                $json = substr($json, 0, strlen($json) - 1) . ",\"".$a."\":".json_encode($b)."}";
+                $json = preg_replace("/\}$/", ",\"".$a."\":".json_encode($b)."}", $json);
             }
             else {
-                $json = "{\"".$a."\":".json_encode($b).",".substr($json, 1, strlen($json));
+                $json = preg_replace("/^\{/", "\"".$a."\":".json_encode($b).",", $json);
             }
         }
+        $json = preg_replace("/^\{,/", "{", $json);
+        $json = preg_replace("/,\}$/", "}", $json);
         return $json;
     }
 }
