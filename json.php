@@ -9,7 +9,7 @@ class json {
         foreach ($setup as $a) {
             $matches;
             preg_match('/"'.$a.'":("?(.*?[^\\\\])?"?)[,\}]/', $json, $matches);
-            $value = $matches ? $matches[1]: "";
+            $value = $matches ? $matches[1]: NULL;
             $first = substr($value, 0, 1);
             if ($first === "{") {
                 $value .= "}";
