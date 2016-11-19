@@ -8,9 +8,12 @@ class json {
         $results = array();
         foreach ($setup as $a) {
             $matches;
-            preg_match("/\"".$a."\":(\"?(.*?[^\\\\])?\"?)[,\}]/", $json, $matches);
+            preg_match('/"'.$a.'":("?(.*?[^\\\\])?"?)[,\}]/', $json, $matches);
             $value = $matches ? $matches[1]: "";
             $first = substr($value, 0, 1);
+            if ($first === "{") {
+                $value .= "}";
+            }
             if ($value !== "" && $first !== "{" && $first !== "[") {
                 $value = json_decode($value);
             }
@@ -21,20 +24,24 @@ class json {
 
     // Set the value of a given key
     // or create it if it does not exist
-    public static function set($json, $key, $value = "") {
+    public static function set($json, $key, $value = "", $first = false) {
         $setup = array();
         if (is_array($key)) {
             $setup = $key;
+            $first = $value;
         }
         else {
             $setup[$key] = $value;
         }
+        if ($first) {
+            $setup = array_reverse($setup);
+        }
         foreach ($setup as $a => $b) {
             if (preg_match("/\"".$a."\"/", $json)) {
-                $json = preg_replace("/\"".$a."\":(\"?(.*?[^\\\\])?\"?)([,\}])/", '"'.$a.'":'.json_encode($b)."$3", $json);
+                $json = preg_replace("/\"".$a."\":(\"?(.*?[^\\\\])?\"?)([,\}])/", '"'.$a.'":'.self::_encodeValue($b)."$3", $json);
             }
             else {
-                $json = self::add($json, $a, $b);
+                $json = self::_addProperty($json, $a, $b, $first);
             }
         }
         return $json;
@@ -50,32 +57,46 @@ class json {
         return $json;
     }
 
-    // Add the given key to the end of the structure
-    // or if the last argument is specified
-    // add it to the beginning
-    public static function add($json, $key, $value = "", $first = false) {
-        $setup = array();
-        if (is_array($key)) {
-            $setup = $key;
-            $first = $value;
-        }
-        else {
-            $setup[$key] = $value;
-        }
+    // Add the given values to the array
+    public static function add($json, $value, $first = false) {
+        $setup = !is_array($value) ? array($value) : $value;
         if ($first) {
             $setup = array_reverse($setup);
         }
-        foreach ($setup as $a => $b) {
-            if (!$first) {
-                $json = preg_replace("/\}$/", ",\"".$a."\":".json_encode($b)."}", $json);
+        if (!$first) {
+            foreach($setup as $a) {
+                $json = preg_replace("/\]/", ",".self::_encodeValue($a)."]", $json);
             }
-            else {
-                $json = preg_replace("/^\{/", "\"".$a."\":".json_encode($b).",", $json);
+        }
+        else {
+            foreach($setup as $a) {
+                $json = preg_replace("/\[/", "[".self::_encodeValue($a).",", $json);
             }
+        }
+        $json = preg_replace("/^\[,/", "[", $json);
+        $json = preg_replace("/,\]$/", "]", $json);
+        return $json;
+    }
+
+    private static function _addProperty($json, $key, $value = "", $first = false) {
+        if (!$first) {
+            $json = preg_replace("/\}$/", ",\"".$key."\":".self::_encodeValue($value)."}", $json);
+        }
+        else {
+            $json = preg_replace("/^\{/", "{\"".$key."\":".self::_encodeValue($value).",", $json);
         }
         $json = preg_replace("/^\{,/", "{", $json);
         $json = preg_replace("/,\}$/", "}", $json);
         return $json;
+    }
+
+    private static function _encodeValue($value = NULL) {
+        if (is_numeric($value)) {
+            return $value;
+        }
+        else {
+            return json_encode($value);
+        }
     }
 }
 
