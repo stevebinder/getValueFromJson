@@ -15,16 +15,21 @@ The json string you work with should not have spaces around the properties or th
 ```php
 require("json.php");
 
-$sample = '{"first":"hello","second":true,"third":"cat\"s long yarn","fourth":22}';
+$object = '{"first":"hello","second":true,"third":"cat\"s long yarn","fourth":22}';
+$array = '[1,2]';
 
-json::get($sample, "first"); // "hello"
-json::get($sample, array("first", "second")); // array("first" => "hello", "second" => true );
-json::set($sample, "first", "goodbye");
-json::set($sample, array("first" => "goodbye", "second" => false));
-json::remove($sample, "first");
-json::remove($sample, array("first", "second"));
-json::add($sample, "key", "value"); // adds key/value to the end
-json::add($sample, "key", "value", true); // adds key/value to the beginning
-json::add($sample, array("a" => 1, "b" => 2)); // adds the keys/values to the end
-json::add($sample, array("a" => 1, "b" => 2), true); // adds the keys/values to the beginning
+// use these when working with objects
+json::get($object, "first"); // "hello"
+json::get($object, "missing"); // null
+json::get($object, array("first", "second")); // array("first" => "hello", "second" => true );
+json::set($object, "first", "goodbye"); // set the key or add it at the end
+json::set($object, "first", "goodbye", true); // set the key or add it at the beginning 
+json::set($object, array("first" => "goodbye", "second" => false)); // set multiple keys to the end
+json::set($object, array("first" => "goodbye", "second" => false), true); // set multiple keys to the beginning
+json::remove($object, "first"); // remove one key
+json::remove($object, array("first", "second")); // remove multiple keys
+
+// use these when working with arrays
+json::add($array, 3); // [1,2,3]
+json::add($array, 0); // [0,1,2]
 ```
