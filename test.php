@@ -49,7 +49,11 @@ $results = array(
     "set_13" => test(json::set($sample5, array("c" => "d", "e" => "f")), '{"a":"","b":2,"c":"d","e":"f"}'),
     "set_14" => test(json::set($sample5, array("c" => "d", "e" => "f"), true), '{"c":"d","e":"f","a":"","b":2}'),
     "set_15" => test(json::set($sample5, "new", 2), '{"a":"","b":2,"new":2}'),
-
+    "set_16" => test(json::set($sample5, "new", '{"name":"bob"}'), '{"a":"","b":2,"new":{"name":"bob"}}'),
+    "set_17" => test(json::set($sample7, "a", true), '{"a":true}'),
+    "set_18" => test(json::set($sample7, "a", 0.11), '{"a":0.11}'),
+    "set_19" => test(json::set($sample7, "a", null), '{"a":null}'),
+    
     "remove_1" => test(json::remove($sample2, "one"), '{"two":"name"}'),
     "remove_2" => test(json::remove($sample2, "two"), '{"one":1}'),
     "remove_3" => test(json::remove($sample2, array("two", "one")), '{}'),
