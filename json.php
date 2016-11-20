@@ -38,7 +38,7 @@ class json {
         }
         foreach ($setup as $a => $b) {
             if (preg_match("/\"".$a."\"/", $json)) {
-                $json = preg_replace("/\"".$a."\":(\"?(.*?[^\\\\])?\"?)([,\}])/", '"'.$a.'":'.self::_encodeValue($b)."$3", $json);
+                $json = preg_replace('/"'.$a.'":("?(.*?[^\\\\])?"?}?)([,\}])/', '"'.$a.'":'.self::_encodeValue($b)."$3", $json);
             }
             else {
                 $json = self::_addProperty($json, $a, $b, $first);
