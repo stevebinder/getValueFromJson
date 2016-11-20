@@ -91,7 +91,7 @@ class json {
     }
 
     private static function _encodeValue($value = NULL) {
-        if (is_numeric($value)) {
+        if (is_numeric($value) || (is_string($value) && preg_match("/^[\{\[]/", substr($value, 0, 1)))) {
             return $value;
         }
         else {
