@@ -14,6 +14,7 @@ $sample6 = '{"a":{},"b":[],"c":""}';
 $sample7 = '{}';
 $sample8 = '[]';
 $sample9 = '[2,3]';
+$sample10 = '{"a":{}}';
 
 function test($output, $correct) {
     $result = $output === $correct ? "PASS" : "FAIL";
@@ -53,6 +54,10 @@ $results = array(
     "set_17" => test(json::set($sample7, "a", true), '{"a":true}'),
     "set_18" => test(json::set($sample7, "a", 0.11), '{"a":0.11}'),
     "set_19" => test(json::set($sample7, "a", null), '{"a":null}'),
+    "set_20" => test(json::set($sample6, "a", array("xyz" => 1)), '{"a":{"xyz":1},"b":[],"c":""}'),
+    "set_21" => test(json::set($sample6, "a", array(1, 2)), '{"a":[1,2],"b":[],"c":""}'),
+    "set_22" => test(json::set($sample6, "a", '{"name":"of"}'), '{"a":{"name":"of"},"b":[],"c":""}'),
+    "set_23" => test(json::set($sample10, "a", '{"c":"d"}'), '{"a":{"c":"d"}}'),
     
     "remove_1" => test(json::remove($sample2, "one"), '{"two":"name"}'),
     "remove_2" => test(json::remove($sample2, "two"), '{"one":1}'),
