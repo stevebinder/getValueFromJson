@@ -23,6 +23,8 @@ $sample15 = '{"a":"i am \"a string\""}';
 $sample16 = '{"a":null,"b":2}';
 $sample17 = '{"b":{"a":3},"a":1,"c":{"a":2}}';
 $sample18 = '{"a":"this\" me"}';
+$sample19 = '{"code":"D5IVB4","sent":1480111705000,"created":14801}';
+$sample20 = '{"a":0}';
 
 function test($output, $correct) {
     $result = $output === $correct ? "PASS" : "FAIL";
@@ -48,6 +50,8 @@ $results = array(
     "get_16" => test(json::get($sample16, "a"), null),
     "get_17" => test(json::get($sample17, "a"), 1),
     "get_18" => test(json::get($sample18, "a"), 'this" me'),
+    "get_19" => test(json::get($sample19, "sent"), 1480111705000),
+    "get_20" => test(json::get($sample20, "a"), 0),
     
 
     "set_1" => test(json::set($sample2, "one", 2), '{"one":2,"two":"name"}'),
