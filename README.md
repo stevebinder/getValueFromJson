@@ -1,9 +1,11 @@
 # json.php
 
-A simple PHP class for modifying non-complex json more efficiently than **json_decode**. The methods in this class are much faster and use less memory than **json_decode** and **json_encode** because they work using **preg_replace**. The methods are even more efficient when the keys you are operating on are closer to the beginning of the json.
+A simple PHP class for modifying non-complex json more efficiently than **json_decode**. The methods in this class are much faster and use less memory than **json_decode** and **json_encode** because they do have to decode the string before modifying it. The methods are even more efficient when the keys you are operating on are closer to the beginning of the json.
 
 # Notes
-This class does not work with multi-level complex json structures because nested keys and objects will trick these methods. Also make sure you use valid json without extra spacing.
+This class does not work with complex json structures (multiple nested objects) because nested keys may trick these methods. 
+
+Make sure you use valid json without extra spacing:
 
 **Valid JSON**: ```{"key":"value","key":"value};```
 
