@@ -186,7 +186,7 @@ class json {
             $last = $current;
             $value .= $current;
             $current = @$json[$index];
-            if (!$current) {
+            if ($current === "") {
                 $reachedEnd = true;
                 break;
             }
