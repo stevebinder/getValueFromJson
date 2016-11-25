@@ -2,23 +2,22 @@
 
 require("json.php");
 
-// let's start with something big
-$generator = array();
-for ($i = 0; $i < 1000000; ++$i) {
-    $generator["_".$i] = $i;
+$json = array();
+$max = 999999;
+for ($i = 0; $i < $max; ++$i) {
+    $json[$i] = $i;
 }
-$hugeJsonString = json_encode($generator);
+$json = json_encode($json);
 
-// first we use the slow method
-$aStart = microtime();
-json_encode($hugeJsonString);
-$aTime = microtime() - $aStart;
+$t1 = microtime(true);
+$decoded = json_decode($json);
+$item = $decoded[$max - 1];
+$c1 = microtime(true) - $t1;
 
-// now we do the fast method
-$bStart = microtime();
-json::get($hugeJsonString, "my_key");
-$bTime = microtime() - $bStart;
+$t2 = microtime(true);
+$item = json::get($json, $max - 1);
+$c2 = microtime(true) - $t2;
 
-echo "[".$aTime."ms][".$bTime."ms][".round(1/($bTime/$aTime))." times faster]";
+echo $c2 / $c1;
 
 ?>
